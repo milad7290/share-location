@@ -1,0 +1,57 @@
+<div class="modal">
+   <div class="modalHeader">
+      <h2>Share new address <span (click)="onCloseModal()">close</span></h2>
+   </div>
+   <form (ngSubmit)="saveSharedLocation()" name="shareForm">
+      <div class="modalBody">
+         <div
+            class="input-field"
+            ng-class="{ active: Login.isLabelActive(loginForm.email) }"
+         >
+            <label> Location name </label>
+
+            <input
+               type="text"
+               name="name"
+               [(ngModel)]="shareLocationModel.name"
+               class="form-control"
+               required
+               autofocus
+            />
+         </div>
+
+         <div class="input-field">
+            <label> Location type </label>
+
+            <select class="form-control" (change)="onSelectingType($event)">
+               <option *ngFor="let type of types" [ngValue]="type">
+                  {{ type.name }}
+               </option>
+            </select>
+         </div>
+
+         <div class="input-field">
+            <label> Logo </label>
+            <div (click)="uploadImage()" class="uploadBox">
+               <input
+                  type="file"
+                  style="display: none"
+                  #logoInput
+                  (change)="onFileChange($event)"
+               />
+               <img height="50" *ngIf="shareLocationModel.logo" [src]="shareLocationModel.logo" />
+
+               <div *ngIf="!shareLocationModel.logo" id="new-plus">
+                  <p>Click to upload</p>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <div class="modalFooter">
+         <button class="cancelBtn">Cancel</button>
+         <button type="submit" class="shareBtn">Save</button>
+      </div>
+   </form>
+</div>
+<div class="overlay"></div>
