@@ -6,7 +6,7 @@
    left: 0;
    width: 9999px;
    height: 9999px;
-   opacity: 0.2;
+   opacity: 0.4;
    background-color: black;
 }
 
@@ -132,4 +132,27 @@ select {
    border: 2px dashed;
    text-align: center;
    cursor: pointer;
+}
+
+
+.map-picker-container {
+   top: 74px;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   margin: 0;
+   height: 270px;
+   width: 100%;
+   max-width: 410px;
+}
+
+.map-picker-frame {
+   border: 2px solid #1976d2;
+   overflow: hidden;
+   height: 100%;
+   border-radius: 5px;
+}
+
+#map-picker {
+   height: 100%;
 }

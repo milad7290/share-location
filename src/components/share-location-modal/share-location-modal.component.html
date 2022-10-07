@@ -31,6 +31,20 @@
          </div>
 
          <div class="input-field">
+            <label>
+               Location on map
+               <span style="font-weight: 200"
+                  >(double click for change selected location)</span
+               >
+            </label>
+            <div class="map-picker-container">
+               <div class="map-picker-frame">
+                  <div id="map-picker"></div>
+               </div>
+            </div>
+         </div>
+
+         <div class="input-field">
             <label> Logo </label>
             <div (click)="uploadImage()" class="uploadBox">
                <input
@@ -39,7 +53,11 @@
                   #logoInput
                   (change)="onFileChange($event)"
                />
-               <img height="50" *ngIf="shareLocationModel.logo" [src]="shareLocationModel.logo" />
+               <img
+                  height="50"
+                  *ngIf="shareLocationModel.logo"
+                  [src]="shareLocationModel.logo"
+               />
 
                <div *ngIf="!shareLocationModel.logo" id="new-plus">
                   <p>Click to upload</p>

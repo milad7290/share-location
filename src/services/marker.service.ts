@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Map, marker as leafMarker } from 'leaflet';
+import { layerGroup, Map, marker as leafMarker } from 'leaflet';
 import { PopupService } from './popup.service';
 
 @Injectable({
@@ -9,6 +9,7 @@ import { PopupService } from './popup.service';
 export class MarkerService {
    capitals: string = '/assets/json/capitals.json';
 
+   layerGroup;
    constructor(private http: HttpClient, private popupService: PopupService) {}
 
    makeCapitalMarkers(map: Map): void {
@@ -22,5 +23,25 @@ export class MarkerService {
             marker.addTo(map);
          }
       });
+   }
+
+   makeLocationMark(
+      map: Map,
+      location: { latitude: number; longitude: number },
+   ): void {
+      const lon = location.longitude;
+      const lat = location.latitude;
+      const marker = leafMarker([lat, lon]);
+
+      this.layerGroup = layerGroup().addTo(map);
+
+      marker.addTo(this.layerGroup);
+   }
+
+   clearLocationMark() {
+      if (this.layerGroup) {
+         this.layerGroup.clearLayers();
+         this.layerGroup = undefined;
+      }
    }
 }

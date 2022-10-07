@@ -42,10 +42,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       );
 
       tiles.addTo(this.map);
-
-      this.map.on('click', (e) => {
-         console.log('e.latlng',e.latlng); // e is an event object (MouseEvent in this case)
-      });
    }
    constructor(private markerService: MarkerService) {}
 
