@@ -9,6 +9,18 @@ import { StorageService } from '../storage.service';
 export class SharedLocationsService {
    sharedLocations: ShareLocationModel[] = [];
    localStorageKey = 'locations';
+   private sharedLocationSource = new BehaviorSubject<ShareLocationModel[]>(
+      this.sharedLocations,
+   );
+
+   sharedLocationSourceObservable = this.sharedLocationSource.asObservable();
+
+   private sharedLocationForUpdate =
+      new BehaviorSubject<ShareLocationModel | null>(null);
+
+   sharedLocationForUpdateObservable =
+      this.sharedLocationForUpdate.asObservable();
+
    constructor(private storageService: StorageService) {
       const locations: ShareLocationModel[] | null =
          this.storageService.getItem(this.localStorageKey);
@@ -19,31 +31,16 @@ export class SharedLocationsService {
       }
    }
 
-   // Observable navItem source
-   private sharedLocationSource = new BehaviorSubject<ShareLocationModel[]>(
-      this.sharedLocations,
-   );
-
-   // Observable navItem stream
-   sharedLocationSourceObservable = this.sharedLocationSource.asObservable();
-
-   // Observable navItem source
-   private sharedLocationForUpdate =
-      new BehaviorSubject<ShareLocationModel | null>(null);
-
-   // Observable navItem stream
-   sharedLocationForUpdateObservable =
-      this.sharedLocationForUpdate.asObservable();
-
    setLocationForUpdate(id: string) {
       const foundLocation = this.sharedLocations.find((item) => item.id === id);
+
       if (foundLocation) {
          this.sharedLocationForUpdate.next(foundLocation);
       } else {
          this.sharedLocationForUpdate.next(null);
       }
    }
-   // service command
+
    addNewLocation(location: ShareLocationModel) {
       this.sharedLocations.push(location);
       this.sharedLocationSource.next(this.sharedLocations);
@@ -57,6 +54,7 @@ export class SharedLocationsService {
          }
          return item;
       });
+
       this.sharedLocationSource.next(updatedLocations);
       this.sharedLocationForUpdate.next(null);
       this.storageService.setItem(this.localStorageKey, updatedLocations);

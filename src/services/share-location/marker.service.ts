@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { layerGroup, Map, marker as leafMarker } from 'leaflet';
 import { ShareLocationModel } from 'src/models/forms/share-location.model';
@@ -9,12 +8,10 @@ import { SharedLocationsService } from './shared-locations.service';
    providedIn: 'root',
 })
 export class MarkerService {
-   capitals: string = '/assets/json/capitals.json';
-
    layerGroupSelectedLocation;
    layerGroupMainMap;
+
    constructor(
-      private http: HttpClient,
       private popupService: PopupService,
       private sharedLocationsService: SharedLocationsService,
    ) {}
@@ -40,12 +37,7 @@ export class MarkerService {
          this.layerGroupMainMap = layerGroup().addTo(map);
 
          marker.addTo(this.layerGroupMainMap);
-         // marker.addTo(map);
       }
-   }
-
-   editLocation(id: string) {
-      this.sharedLocationsService.setLocationForUpdate(id);
    }
 
    markSpecificLocation(
@@ -59,6 +51,10 @@ export class MarkerService {
       this.layerGroupSelectedLocation = layerGroup().addTo(map);
 
       marker.addTo(this.layerGroupSelectedLocation);
+   }
+
+   editLocation(id: string) {
+      this.sharedLocationsService.setLocationForUpdate(id);
    }
 
    clearLocationMark() {

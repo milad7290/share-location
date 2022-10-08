@@ -11,13 +11,10 @@
    cursor: pointer;
 }
 
-.details {
-}
-
 .details img {
- max-height: 30;
- object-fit: contain;
+   max-height: 30;
+   object-fit: contain;
 }
 .details p {
-    margin: 7px 0px;
+   margin: 7px 0px;
 }

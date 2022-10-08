@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { icon, Map, map, Marker, tileLayer } from 'leaflet';
 import { Subscription } from 'rxjs';
 import { ShareLocationModel } from 'src/models/forms/share-location.model';
@@ -25,7 +25,7 @@ Marker.prototype.options.icon = iconDefault;
    templateUrl: './map.component.html',
    styleUrls: ['./map.component.css'],
 })
-export class MapComponent implements OnInit, AfterViewInit {
+export class MapComponent implements AfterViewInit {
    private map: Map;
 
    sharedLocations: ShareLocationModel[] = [];
@@ -34,7 +34,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       private markerService: MarkerService,
       private sharedLocationsService: SharedLocationsService,
    ) {}
-
 
    private initMap(): void {
       this.map = map('map', {
@@ -66,9 +65,6 @@ export class MapComponent implements OnInit, AfterViewInit {
             },
          );
    }
-
-
-   ngOnInit(): void {}
 
    ngAfterViewInit(): void {
       this.initMap();

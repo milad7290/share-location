@@ -5,8 +5,6 @@ import { ShareLocationModel } from 'src/models/forms/share-location.model';
    providedIn: 'root',
 })
 export class PopupService {
-   constructor() {}
-
    makeLocationPopup(data: ShareLocationModel): string {
       return (
          `<div>` +

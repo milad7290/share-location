@@ -12,7 +12,6 @@ import { MapComponent } from './map.component';
    providers: [MarkerService, PopupService, SharedLocationsService],
    exports: [MapComponent],
 })
-// export class MapModule {}
 export class MapModule {
    static rootComponent = MapComponent;
 }

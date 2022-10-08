@@ -2,9 +2,6 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class StorageService {
-   constructor() {
-   }
-
    private get ourStorage(): Storage {
       return localStorage;
    }
