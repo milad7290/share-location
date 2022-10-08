@@ -31,7 +31,7 @@ export class SharedLocationsService {
       }
    }
 
-   setLocationForUpdate(id: string) {
+   setLocationForUpdate(id: string | null) {
       const foundLocation = this.sharedLocations.find((item) => item.id === id);
 
       if (foundLocation) {

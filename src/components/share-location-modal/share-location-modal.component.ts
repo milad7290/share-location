@@ -8,6 +8,7 @@ import {
    Output,
    ViewChild
 } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { icon, LatLng, Map, map, Marker, tileLayer } from 'leaflet';
 import { ShareLocationModel } from 'src/models/forms/share-location.model';
 import { MarkerService } from 'src/services/share-location/marker.service';
@@ -44,18 +45,32 @@ export class ShareLocationModalComponent implements OnInit, AfterViewInit {
 
    shareLocation: ShareLocationModel;
 
-   types = [
-      {
-         name: 'Business',
-      },
-      {
-         name: 'Home',
-      },
-   ];
+   types = ['Business', 'Home'];
 
    private map: Map;
+   isSubmitted = false;
 
-   // currentLocation: { latitude: number; longitude: number } = null;
+   constructor(
+      private markerService: MarkerService,
+      private sharedLocationsService: SharedLocationsService,
+      public fb: FormBuilder,
+   ) {
+      const newUuid = uuidv4();
+      this.shareLocation = new ShareLocationModel(newUuid);
+   }
+
+   shareForm = this.fb.group({
+      name: ['', [Validators.required]],
+      type: ['', [Validators.required]],
+   });
+
+   get type() {
+      return this.shareForm.get('type');
+   }
+
+   get name() {
+      return this.shareForm.get('name');
+   }
 
    private initMap(): void {
       this.map = map('map-picker', {
@@ -86,23 +101,23 @@ export class ShareLocationModalComponent implements OnInit, AfterViewInit {
             this.map,
             this.shareLocation.selectedLocation,
          );
-      });
-   }
 
-   constructor(
-      private markerService: MarkerService,
-      private sharedLocationsService: SharedLocationsService,
-   ) {
-      const newUuid = uuidv4();
-      this.shareLocation = new ShareLocationModel(newUuid);
-      this.shareLocation.type = this.types[0].name;
+         this.locationError = false;
+      });
    }
 
    loadingCurrentLocation = false;
    errorCurrentLocation = '';
+   locationError = false;
+   logoError = false;
    ngOnInit(): void {
       if (this.shareLocationForUpdate) {
          this.shareLocation = this.shareLocationForUpdate;
+
+         this.shareForm.setValue({
+            name: this.shareLocationForUpdate.name,
+            type: this.shareLocationForUpdate.type,
+         });
       }
       if (!navigator.geolocation) {
          this.errorCurrentLocation =
@@ -132,6 +147,7 @@ export class ShareLocationModalComponent implements OnInit, AfterViewInit {
                );
                this.errorCurrentLocation = '';
                this.loadingCurrentLocation = false;
+               this.locationError = false;
             },
             () => {
                this.errorCurrentLocation =
@@ -157,15 +173,33 @@ export class ShareLocationModalComponent implements OnInit, AfterViewInit {
          );
          this.errorCurrentLocation = '';
          this.loadingCurrentLocation = false;
-         // this.markerService.makeCapitalMarkers(this.map);
+         this.locationError = false;
       }
    }
 
    onCloseModal() {
       this.onModalClosed.emit();
+      if (this.shareLocationForUpdate) {
+         this.sharedLocationsService.setLocationForUpdate(null);
+      }
    }
 
    saveSharedLocation() {
+      this.isSubmitted = true;
+      if (!this.shareForm.valid) {
+         return false;
+      }
+
+      if (!this.shareLocation.selectedLocation) {
+         this.locationError = true;
+         return false;
+      }
+      if (!this.shareLocation.logo) {
+         this.logoError = true;
+         return false;
+      }
+      this.shareLocation.name = this.shareForm.value.name;
+      this.shareLocation.type = this.shareForm.value.type;
       if (this.shareLocationForUpdate) {
          this.sharedLocationsService.updateNewLocation(this.shareLocation);
       } else {
@@ -175,7 +209,9 @@ export class ShareLocationModalComponent implements OnInit, AfterViewInit {
    }
 
    onSelectingType(event) {
-      this.shareLocation.type = event.target.value;
+      this.type.setValue(event.target.value, {
+         onlySelf: true,
+      });
    }
 
    uploadImage() {
@@ -192,6 +228,7 @@ export class ShareLocationModalComponent implements OnInit, AfterViewInit {
                this.shareLocation.logo = reader.result;
             };
             reader.readAsDataURL(selectedFile);
+            this.logoError = false;
          }
       }
    }

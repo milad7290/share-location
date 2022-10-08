@@ -2,64 +2,95 @@
    <div class="modalHeader">
       <h2>Share new address <span (click)="onCloseModal()">close</span></h2>
    </div>
-   <form (ngSubmit)="saveSharedLocation()" name="shareForm">
+
+   <form [formGroup]="shareForm" (ngSubmit)="saveSharedLocation()">
       <div class="modalBody">
          <div
             class="input-field"
             ng-class="{ active: Login.isLabelActive(loginForm.email) }"
          >
             <label for="name"> Location name </label>
+            <div class="form-container">
+               <input
+                  type="text"
+                  formControlName="name"
+                  id="name"
+                  class="form-control"
+                  required
+                  autofocus
+               />
 
-            <input
-               type="text"
-               name="name"
-               id="name"
-               [(ngModel)]="shareLocation.name"
-               class="form-control"
-               required
-               autofocus
-            />
+               <div
+                  class="invalid-feedback"
+                  *ngIf="isSubmitted && name.errors?.required"
+               >
+                  <sup>*</sup>Please enter name
+               </div>
+            </div>
          </div>
 
          <div class="input-field">
             <label> Location type </label>
 
-            <select class="form-control" (change)="onSelectingType($event)">
-               <option *ngFor="let type of types" [ngValue]="type">
-                  {{ type.name }}
-               </option>
-            </select>
+            <div class="form-container">
+               <select
+                  class="form-control"
+                  (change)="onSelectingType($event)"
+                  [value]='Business'
+                  formControlName="type"
+               >
+                  <option value="">Choose a type</option>
+                  <option *ngFor="let type of types" [ngValue]="type">
+                     {{ type }}
+                  </option>
+               </select>
+
+               <div
+                  class="invalid-feedback"
+                  *ngIf="isSubmitted && type.errors?.required"
+               >
+                  <sup>*</sup>Please select type
+               </div>
+            </div>
          </div>
 
          <div class="input-field">
             <label> Location on map </label>
-            <div class="locationContainer">
-               <span class="locationHint"
-                  >{{
-                     loadingCurrentLocation
-                        ? 'Loading your current location'
-                        : '(Double click for change selected location)'
-                  }}
+            <div class="form-container">
+               <div class="locationContainer">
+                  <span class="locationHint"
+                     >{{
+                        loadingCurrentLocation
+                           ? 'Loading your current location'
+                           : '(Double click for change selected location)'
+                     }}
 
-                  <svg
-                     *ngIf="loadingCurrentLocation"
-                     class="spinner"
-                     viewBox="0 0 50 50"
-                  >
-                     <circle
-                        class="path"
-                        cx="25"
-                        cy="25"
-                        r="20"
-                        fill="none"
-                        stroke-width="5"
-                     ></circle>
-                  </svg>
-               </span>
-               <div class="map-picker-container">
-                  <div class="map-picker-frame">
-                     <div id="map-picker"></div>
+                     <svg
+                        *ngIf="loadingCurrentLocation"
+                        class="spinner"
+                        viewBox="0 0 50 50"
+                     >
+                        <circle
+                           class="path"
+                           cx="25"
+                           cy="25"
+                           r="20"
+                           fill="none"
+                           stroke-width="5"
+                        ></circle>
+                     </svg>
+                  </span>
+                  <div class="map-picker-container">
+                     <div class="map-picker-frame">
+                        <div id="map-picker"></div>
+                     </div>
                   </div>
+               </div>
+               <div
+                  class="invalid-feedback"
+                  *ngIf="isSubmitted && locationError"
+               >
+                  <sup>*</sup>Please select location
                </div>
             </div>
          </div>
@@ -70,21 +101,29 @@
 
          <div class="input-field">
             <label> Logo </label>
-            <div (click)="uploadImage()" class="uploadBox">
-               <input
-                  type="file"
-                  style="display: none"
-                  #logoInput
-                  (change)="onFileChange($event)"
-               />
-               <img
-                  height="50"
-                  *ngIf="shareLocation.logo"
-                  [src]="shareLocation.logo"
-               />
+            <div class="form-container">
+               <div (click)="uploadImage()" class="uploadBox">
+                  <input
+                     type="file"
+                     style="display: none"
+                     #logoInput
+                     (change)="onFileChange($event)"
+                  />
+                  <img
+                     height="50"
+                     *ngIf="shareLocation.logo"
+                     [src]="shareLocation.logo"
+                  />
 
-               <div *ngIf="!shareLocation.logo" id="new-plus">
-                  <p>Click to upload</p>
+                  <div *ngIf="!shareLocation.logo" id="new-plus">
+                     <p>Click to upload</p>
+                  </div>
+               </div>
+               <div
+                  class="invalid-feedback"
+                  *ngIf="isSubmitted && logoError"
+               >
+                  <sup>*</sup>Please set a logo for location
                </div>
             </div>
          </div>
