@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
-import { MarkerService } from 'src/services/marker.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MarkerService } from 'src/services/share-location/marker.service';
+import { PopupService } from 'src/services/share-location/popup.service';
 import { SharedModule } from 'src/shared/shared.module';
-import { PopupService } from '../../services/popup.service';
 import { ShareLocationModalComponent } from './share-location-modal.component';
 
 @NgModule({
    declarations: [ShareLocationModalModule.rootComponent],
    entryComponents: [ShareLocationModalModule.rootComponent],
-   imports: [SharedModule],
+   imports: [SharedModule, FormsModule, ReactiveFormsModule],
    providers: [MarkerService, PopupService],
    exports: [ShareLocationModalComponent],
 })

@@ -3,13 +3,16 @@ import {
    Component,
    ElementRef,
    EventEmitter,
+   Input,
    OnInit,
    Output,
    ViewChild
 } from '@angular/core';
 import { icon, LatLng, Map, map, Marker, tileLayer } from 'leaflet';
 import { ShareLocationModel } from 'src/models/forms/share-location.model';
-import { MarkerService } from 'src/services/marker.service';
+import { MarkerService } from 'src/services/share-location/marker.service';
+import { SharedLocationsService } from 'src/services/share-location/shared-locations.service';
+import { v4 as uuidv4 } from 'uuid';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
 const iconUrl = 'assets/marker-icon.png';
@@ -37,6 +40,10 @@ export class ShareLocationModalComponent implements OnInit, AfterViewInit {
    @Output()
    onModalClosed = new EventEmitter<string>();
 
+   @Input() shareLocationForUpdate: ShareLocationModel | null;
+
+   shareLocation: ShareLocationModel;
+
    types = [
       {
          name: 'Business',
@@ -54,6 +61,7 @@ export class ShareLocationModalComponent implements OnInit, AfterViewInit {
       this.map = map('map-picker', {
          center: [39.8282, -98.5795],
          zoom: 3,
+         doubleClickZoom: false,
       });
 
       const tiles = tileLayer(
@@ -69,59 +77,88 @@ export class ShareLocationModalComponent implements OnInit, AfterViewInit {
       tiles.addTo(this.map);
 
       this.map.on('dblclick', (e) => {
-         console.log('e.latlng', e.latlng); // e is an event object (MouseEvent in this case)
-
          this.markerService.clearLocationMark();
-         this.shareLocationModel.selectedLocation = {
+         this.shareLocation.selectedLocation = {
             latitude: e.latlng.lat,
             longitude: e.latlng.lng,
          };
-         this.markerService.makeLocationMark(
+         this.markerService.markSpecificLocation(
             this.map,
-            this.shareLocationModel.selectedLocation,
+            this.shareLocation.selectedLocation,
          );
       });
    }
 
-   shareLocationModel: ShareLocationModel;
-   constructor(private markerService: MarkerService) {
-      this.shareLocationModel = new ShareLocationModel();
-      this.shareLocationModel.type = this.types[1].name;
+   constructor(
+      private markerService: MarkerService,
+      private sharedLocationsService: SharedLocationsService,
+   ) {
+      const newUuid = uuidv4();
+      this.shareLocation = new ShareLocationModel(newUuid);
+      this.shareLocation.type = this.types[0].name;
    }
 
+   loadingCurrentLocation = false;
+   errorCurrentLocation = '';
    ngOnInit(): void {
-      if (!navigator.geolocation) {
-         console.log('location is not supported');
+      if (this.shareLocationForUpdate) {
+         this.shareLocation = this.shareLocationForUpdate;
       }
-      navigator.geolocation.getCurrentPosition((position) => {
-         const coords = position.coords;
-         const latLong = [coords.latitude, coords.longitude];
-         console.log(
-            `lat: ${position.coords.latitude}, lon: ${position.coords.longitude}`,
-         );
+      if (!navigator.geolocation) {
+         this.errorCurrentLocation =
+            'Location does not support (or permitted) on your device.';
+      }
 
-         // this.markerService.clearLocationMark();
+      if (!this.shareLocationForUpdate) {
+         this.loadingCurrentLocation = true;
 
-         this.shareLocationModel.selectedLocation = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-         };
-         this.map.panTo(
-            new LatLng(
-               this.shareLocationModel.selectedLocation.latitude,
-               this.shareLocationModel.selectedLocation.longitude,
-            ),
+         navigator.geolocation.getCurrentPosition(
+            (position) => {
+               this.markerService.clearLocationMark();
+
+               this.shareLocation.selectedLocation = {
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+               };
+               this.map.panTo(
+                  new LatLng(
+                     this.shareLocation.selectedLocation.latitude,
+                     this.shareLocation.selectedLocation.longitude,
+                  ),
+               );
+               this.markerService.markSpecificLocation(
+                  this.map,
+                  this.shareLocation.selectedLocation,
+               );
+               this.errorCurrentLocation = '';
+               this.loadingCurrentLocation = false;
+            },
+            () => {
+               this.errorCurrentLocation =
+                  'It seems you have a network issue, check that out then try again';
+               this.loadingCurrentLocation = false;
+            },
          );
-         this.markerService.makeLocationMark(
-            this.map,
-            this.shareLocationModel.selectedLocation,
-         );
-      });
+      }
    }
 
    ngAfterViewInit(): void {
       this.initMap();
-      // this.markerService.makeCapitalMarkers(this.map);
+      if (this.shareLocationForUpdate) {
+         this.map.panTo(
+            new LatLng(
+               this.shareLocation.selectedLocation.latitude,
+               this.shareLocation.selectedLocation.longitude,
+            ),
+         );
+         this.markerService.markSpecificLocation(
+            this.map,
+            this.shareLocation.selectedLocation,
+         );
+         this.errorCurrentLocation = '';
+         this.loadingCurrentLocation = false;
+         // this.markerService.makeCapitalMarkers(this.map);
+      }
    }
 
    onCloseModal() {
@@ -129,11 +166,16 @@ export class ShareLocationModalComponent implements OnInit, AfterViewInit {
    }
 
    saveSharedLocation() {
-      console.log('shareLocationModel', this.shareLocationModel);
+      if (this.shareLocationForUpdate) {
+         this.sharedLocationsService.updateNewLocation(this.shareLocation);
+      } else {
+         this.sharedLocationsService.addNewLocation(this.shareLocation);
+      }
+      this.onCloseModal();
    }
 
    onSelectingType(event) {
-      this.shareLocationModel.type = event.target.value;
+      this.shareLocation.type = event.target.value;
    }
 
    uploadImage() {
@@ -147,7 +189,7 @@ export class ShareLocationModalComponent implements OnInit, AfterViewInit {
          if (selectedFile.type.startsWith('image')) {
             const reader = new FileReader();
             reader.onload = (e) => {
-               this.shareLocationModel.logo = reader.result;
+               this.shareLocation.logo = reader.result;
             };
             reader.readAsDataURL(selectedFile);
          }

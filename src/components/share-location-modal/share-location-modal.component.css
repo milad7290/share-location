@@ -79,14 +79,15 @@
    position: relative;
    padding-top: 15px;
    width: 88%;
-   margin: auto;  
-   margin-top: 15px;
+   margin: auto;
+   margin-top: 20px;
+   display: flex;
 }
 
 label {
    color: #000;
-   position: absolute;
-   top: -3px;
+   /* position: absolute; */
+   top: -7px;
    left: 5px;
    cursor: text;
    margin-bottom: 0;
@@ -94,6 +95,28 @@ label {
    transition: all 0.2s ease-out;
    font-size: 11px;
    font-weight: 700;
+   min-width: 100px;
+   margin-right: 15px;
+   padding: 15px 0px;
+}
+
+.locationContainer {
+   display: grid;
+   width: 100%;
+}
+
+.locationHint {
+   font-weight: 200;
+   position: relative;
+   padding-left: 4px;
+   margin-bottom: 7px;
+   font-size: 10px;
+   width: fit-content;
+}
+
+.locationError {
+   color: red;
+   font-size: 10px;
 }
 
 input {
@@ -124,7 +147,7 @@ select {
    max-width: 410px;
 }
 
-.uploadBox{
+.uploadBox {
    width: 100%;
    max-width: 390px;
    padding: 10px;
@@ -133,7 +156,6 @@ select {
    text-align: center;
    cursor: pointer;
 }
-
 
 .map-picker-container {
    top: 74px;
@@ -155,4 +177,48 @@ select {
 
 #map-picker {
    height: 100%;
+}
+
+.spinner {
+   animation: rotate 2s linear infinite;
+   z-index: 2;
+   position: absolute;
+   top: 21px;
+   right: -29px;
+   margin: -25px 0 0 -25px;
+   width: 20px;
+   height: 20px;
+}
+
+.spinner .path {
+   stroke: #1976d2;
+   stroke-linecap: round;
+   animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+   100% {
+      transform: rotate(360deg);
+   }
+}
+
+@keyframes rotate {
+   100% {
+      transform: rotate(360deg);
+   }
+}
+
+@keyframes dash {
+   0% {
+      stroke-dasharray: 1, 150;
+      stroke-dashoffset: 0;
+   }
+   50% {
+      stroke-dasharray: 90, 150;
+      stroke-dashoffset: -35;
+   }
+   100% {
+      stroke-dasharray: 90, 150;
+      stroke-dashoffset: -124;
+   }
 }

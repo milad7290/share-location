@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MapModule } from 'src/components/map/map.module';
 import { ShareLocationModalModule } from 'src/components/share-location-modal/share-location-modal.module';
+import { SharedLocationsService } from 'src/services/share-location/shared-locations.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
@@ -15,7 +16,7 @@ import { AppComponent } from './app.component';
       ShareLocationModalModule,
       HttpClientModule,
    ],
-   providers: [],
+   providers: [SharedLocationsService],
    bootstrap: [AppComponent],
 })
 export class AppModule {}

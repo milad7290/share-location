@@ -8,12 +8,13 @@
             class="input-field"
             ng-class="{ active: Login.isLabelActive(loginForm.email) }"
          >
-            <label> Location name </label>
+            <label for="name"> Location name </label>
 
             <input
                type="text"
                name="name"
-               [(ngModel)]="shareLocationModel.name"
+               id="name"
+               [(ngModel)]="shareLocation.name"
                class="form-control"
                required
                autofocus
@@ -31,18 +32,41 @@
          </div>
 
          <div class="input-field">
-            <label>
-               Location on map
-               <span style="font-weight: 200"
-                  >(double click for change selected location)</span
-               >
-            </label>
-            <div class="map-picker-container">
-               <div class="map-picker-frame">
-                  <div id="map-picker"></div>
+            <label> Location on map </label>
+            <div class="locationContainer">
+               <span class="locationHint"
+                  >{{
+                     loadingCurrentLocation
+                        ? 'Loading your current location'
+                        : '(Double click for change selected location)'
+                  }}
+
+                  <svg
+                     *ngIf="loadingCurrentLocation"
+                     class="spinner"
+                     viewBox="0 0 50 50"
+                  >
+                     <circle
+                        class="path"
+                        cx="25"
+                        cy="25"
+                        r="20"
+                        fill="none"
+                        stroke-width="5"
+                     ></circle>
+                  </svg>
+               </span>
+               <div class="map-picker-container">
+                  <div class="map-picker-frame">
+                     <div id="map-picker"></div>
+                  </div>
                </div>
             </div>
          </div>
+
+         <p *ngIf="errorCurrentLocation" class="locationError">
+            {{ errorCurrentLocation }}
+         </p>
 
          <div class="input-field">
             <label> Logo </label>
@@ -55,11 +79,11 @@
                />
                <img
                   height="50"
-                  *ngIf="shareLocationModel.logo"
-                  [src]="shareLocationModel.logo"
+                  *ngIf="shareLocation.logo"
+                  [src]="shareLocation.logo"
                />
 
-               <div *ngIf="!shareLocationModel.logo" id="new-plus">
+               <div *ngIf="!shareLocation.logo" id="new-plus">
                   <p>Click to upload</p>
                </div>
             </div>
@@ -67,7 +91,9 @@
       </div>
 
       <div class="modalFooter">
-         <button class="cancelBtn">Cancel</button>
+         <button type="button" class="cancelBtn" (click)="onCloseModal()">
+            Cancel
+         </button>
          <button type="submit" class="shareBtn">Save</button>
       </div>
    </form>

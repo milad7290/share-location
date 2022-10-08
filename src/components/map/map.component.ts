@@ -1,6 +1,9 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { icon, Map, map, Marker, tileLayer } from 'leaflet';
-import { MarkerService } from '../../services/marker.service';
+import { Subscription } from 'rxjs';
+import { ShareLocationModel } from 'src/models/forms/share-location.model';
+import { SharedLocationsService } from 'src/services/share-location/shared-locations.service';
+import { MarkerService } from '../../services/share-location/marker.service';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
 const iconUrl = 'assets/marker-icon.png';
@@ -25,9 +28,17 @@ Marker.prototype.options.icon = iconDefault;
 export class MapComponent implements OnInit, AfterViewInit {
    private map: Map;
 
+   sharedLocations: ShareLocationModel[] = [];
+   subscription: Subscription;
+   constructor(
+      private markerService: MarkerService,
+      private sharedLocationsService: SharedLocationsService,
+   ) {}
+
+
    private initMap(): void {
       this.map = map('map', {
-         center: [39.8282, -98.5795],
+         center: [29.8282, -28.5795],
          zoom: 3,
       });
 
@@ -42,13 +53,24 @@ export class MapComponent implements OnInit, AfterViewInit {
       );
 
       tiles.addTo(this.map);
+
+      this.subscription =
+         this.sharedLocationsService.sharedLocationSourceObservable.subscribe(
+            (locations) => {
+               this.markerService.clearAllLocationMark();
+               this.sharedLocations = locations;
+               this.markerService.markSpecificLocations(
+                  this.map,
+                  this.sharedLocations,
+               );
+            },
+         );
    }
-   constructor(private markerService: MarkerService) {}
+
 
    ngOnInit(): void {}
 
    ngAfterViewInit(): void {
       this.initMap();
-      this.markerService.makeCapitalMarkers(this.map);
    }
 }

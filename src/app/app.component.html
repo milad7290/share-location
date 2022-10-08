@@ -33,6 +33,7 @@
 <app-share-location-modal
    *ngIf="openShareModal"
    (onModalClosed)="onCloseShareView()"
+   [shareLocationForUpdate]="locationForUpdate"
 ></app-share-location-modal>
 
 <router-outlet></router-outlet>

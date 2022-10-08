@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
-import { MarkerService } from 'src/services/marker.service';
+import { MarkerService } from 'src/services/share-location/marker.service';
+import { PopupService } from 'src/services/share-location/popup.service';
+import { SharedLocationsService } from 'src/services/share-location/shared-locations.service';
 import { SharedModule } from 'src/shared/shared.module';
-import { PopupService } from './../../services/popup.service';
 import { MapComponent } from './map.component';
 
 @NgModule({
    declarations: [MapModule.rootComponent],
    entryComponents: [MapModule.rootComponent],
    imports: [SharedModule],
-   providers: [MarkerService, PopupService],
+   providers: [MarkerService, PopupService, SharedLocationsService],
    exports: [MapComponent],
 })
 // export class MapModule {}
