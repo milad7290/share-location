@@ -20,6 +20,7 @@ export class SharedLocationsService {
     this.sharedLocationForUpdate.asObservable();
 
   constructor(private storageService: StorageService) {
+    // get existing location from local storage and update locations
     const locations: ShareLocationModel[] | null = this.storageService.getItem(
       this.localStorageKey
     );

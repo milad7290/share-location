@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { ShareLocationModel } from "src/models/forms/share-location.model";
 
 @Injectable({
-   providedIn: 'root',
+  providedIn: "root",
 })
 export class PopupService {
   makeLocationPopup(data: ShareLocationModel): string {

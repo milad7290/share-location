@@ -14,7 +14,7 @@ export class MarkerService {
     private sharedLocationsService: SharedLocationsService
   ) {}
 
-  markSpecificLocations(map: Map, locations: ShareLocationModel[]): void {
+  markGroupOfLocations(map: Map, locations: ShareLocationModel[]): void {
     const _this = this;
     for (const location of locations) {
       if (location.selectedLocation) {

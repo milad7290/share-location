@@ -28,21 +28,16 @@ describe("SharedLocationsService", () => {
       },
       clear: () => {
         store = {};
-      }
+      },
     };
 
-    spyOn(localStorage, 'getItem')
-    .and.callFake(mockLocalStorage.getItem);
-    spyOn(localStorage, 'setItem')
-      .and.callFake(mockLocalStorage.setItem);
-    spyOn(localStorage, 'removeItem')
-      .and.callFake(mockLocalStorage.removeItem);
-    spyOn(localStorage, 'clear')
-      .and.callFake(mockLocalStorage.clear);
+    spyOn(localStorage, "getItem").and.callFake(mockLocalStorage.getItem);
+    spyOn(localStorage, "setItem").and.callFake(mockLocalStorage.setItem);
+    spyOn(localStorage, "removeItem").and.callFake(mockLocalStorage.removeItem);
+    spyOn(localStorage, "clear").and.callFake(mockLocalStorage.clear);
   });
 
   it("should create a location", () => {
-
     let resultLocations: ShareLocationModel[] = [];
 
     service.sharedLocationSourceObservable.subscribe((locations) => {

@@ -56,7 +56,7 @@ export class MapComponent implements AfterViewInit {
           if (this.map) {
             this.markerService.clearAllLocationMark();
             this.sharedLocations = locations;
-            this.markerService.markSpecificLocations(
+            this.markerService.markGroupOfLocations(
               this.map,
               this.sharedLocations
             );
