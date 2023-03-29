@@ -2,7 +2,7 @@ import { AfterViewInit, Component } from "@angular/core";
 import { icon, Map, map, Marker, tileLayer } from "leaflet";
 import { Subscription } from "rxjs";
 import { ShareLocationModel } from "src/models/forms/share-location.model";
-import { SharedLocationsService } from "src/services/share-location/shared-locations.service";
+import { SharedLocationsService } from "src/services/share-location/shared-locations.service/shared-locations.service";
 import { MarkerService } from "../../services/share-location/marker.service";
 import { environment } from "../../environments/environment";
 

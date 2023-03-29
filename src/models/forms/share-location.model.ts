@@ -1,10 +1,16 @@
 export class ShareLocationModel {
-  constructor(id: string) {
+  constructor(
+    id: string,
+    name?: string,
+    type?: string,
+    logo?: string,
+    selectedLocation?: { latitude: number; longitude: number }
+  ) {
     this.id = id;
-    this.name = null;
-    this.type = null;
-    this.logo = null;
-    this.selectedLocation = null;
+    this.name = name || null;
+    this.type = type || null;
+    this.logo = logo || null;
+    this.selectedLocation = selectedLocation || null;
   }
   public id: string;
   public name: string | null;

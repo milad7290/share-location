@@ -13,7 +13,7 @@ import { FormBuilder, Validators } from "@angular/forms";
 import { icon, LatLng, Map, map, Marker, tileLayer } from "leaflet";
 import { ShareLocationModel } from "src/models/forms/share-location.model";
 import { MarkerService } from "src/services/share-location/marker.service";
-import { SharedLocationsService } from "src/services/share-location/shared-locations.service";
+import { SharedLocationsService } from "src/services/share-location/shared-locations.service/shared-locations.service";
 import { v4 as uuidv4 } from "uuid";
 
 const iconRetinaUrl = "assets/marker-icon-2x.png";

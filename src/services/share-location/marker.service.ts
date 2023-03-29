@@ -2,11 +2,9 @@ import { Injectable } from "@angular/core";
 import { LayerGroup, layerGroup, Map, marker as leafMarker } from "leaflet";
 import { ShareLocationModel } from "src/models/forms/share-location.model";
 import { PopupService } from "./popup.service";
-import { SharedLocationsService } from "./shared-locations.service";
+import { SharedLocationsService } from "./shared-locations.service/shared-locations.service";
 
-@Injectable({
-  providedIn: "root",
-})
+@Injectable()
 export class MarkerService {
   layerGroupSelectedLocation: LayerGroup<any> | undefined;
   layerGroupMainMap: LayerGroup<any> | undefined;

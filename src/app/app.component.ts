@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ShareLocationModel } from 'src/models/forms/share-location.model';
-import { SharedLocationsService } from 'src/services/share-location/shared-locations.service';
+import { SharedLocationsService } from 'src/services/share-location/shared-locations.service/shared-locations.service';
 
 @Component({
    selector: 'app-root',
