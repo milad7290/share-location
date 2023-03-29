@@ -9,6 +9,7 @@ import { SharedLocationsService } from 'src/services/share-location/shared-locat
    styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+   title = 'Share location';
    openShareModal = false;
    locationForUpdate: ShareLocationModel | null = null;
    subscription: Subscription;
